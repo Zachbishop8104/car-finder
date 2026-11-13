@@ -1,0 +1,15 @@
+# Personal: never commit these. See config.example.yaml / .env.example.
+config.yaml
+config.*.yaml
+!config.example.yaml
+.env
+
+# Generated
+output/
+dist/
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/

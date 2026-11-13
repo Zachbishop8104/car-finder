@@ -1,0 +1,54 @@
+name: Bug report
+description: Something doesn't work the way the README or SKILL.md says it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before posting, remove anything personal from what you paste: your API key, your ZIP code, and VINs you'd rather not share.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command and output
+      description: The exact command you ran and what it printed. Does it also happen with `--sample`?
+      render: shell
+    validations:
+      required: true
+  - type: dropdown
+    id: how-run
+    attributes:
+      label: How are you running it
+      options:
+        - Command line, from a checkout
+        - As an agent skill installed in a folder
+        - As an agent skill loaded from a marketplace
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.12.4"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Windows 11, macOS 15, Ubuntu 24.04"
+    validations:
+      required: true
+  - type: textarea
+    id: where
+    attributes:
+      label: Output of `python run.py where`
+      description: It never prints your API key. Remove folder names if you'd rather not share them.
+      render: shell

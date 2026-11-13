@@ -1,0 +1,38 @@
+name: Reliability profile correction
+description: A reliability profile is wrong, out of date, or missing for a model
+labels: ["profile"]
+body:
+  - type: input
+    id: vehicle
+    attributes:
+      label: Vehicle
+      description: Make, model and the model years affected.
+      placeholder: "Honda CR-V, 2017-2019"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of problem
+      options:
+        - A recall or complaint figure is wrong
+        - A known issue is missing
+        - The score or risk flag seems unjustified
+        - The year range or generation is wrong
+        - This model has no profile
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: What is wrong, and what it should say
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: Profiles are based on NHTSA recall and complaint records. Give the recall campaign number, or the model year and component you looked up, so it can be checked.
+      placeholder: "NHTSA recall 23V744000; 2024 model year complaints, ELECTRICAL SYSTEM"
+    validations:
+      required: true

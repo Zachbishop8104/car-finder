@@ -1,0 +1,121 @@
+# ============================================================
+# Car Finder: configuration template
+#
+# Don't edit this file. Either run:
+#
+#     python run.py setup
+#
+# which asks a few questions and writes config.yaml for you, or copy
+# this file to config.yaml in your data folder and edit that
+# (`python run.py where` shows the folder). Your ZIP, budget and API
+# limits stay there, out of the code.
+# ============================================================
+
+search:
+  # Keep the quotes: a ZIP is text, and one that starts with 0 ("02134")
+  # must not be read as a number.
+  zip: "60601"          # ← your ZIP code
+  radius_miles: 60      # how far you'll drive (free API plan caps this at 100)
+  price_min: 10000
+  price_max: 40000
+  miles_min: 0
+  miles_max: 80000
+  # Sedan, SUV, Pickup, Coupe, Hatchback, Wagon, Minivan, Convertible,
+  # or "" for any body type
+  body_type: ""
+  drivetrain: ""        # AWD, FWD, RWD, or "" for no preference
+  # gas, hybrid, plug-in hybrid, electric, diesel, or "" for any.
+  # Several are allowed: "hybrid, plug-in hybrid"
+  powertrain: ""
+  # Model years to include. Leave either one out for no limit.
+  # year_min: 2019
+  # year_max: 2024
+  # Which listing conditions to include: used, certified, new
+  car_types:
+    - used
+    - certified
+
+# The models to search for: REPLACE THESE WITH WHAT YOU ACTUALLY WANT.
+# "model" is optional (leave it out to search everything from that make
+# matching your filters). "make" is optional too: a target with neither,
+# or no targets at all ("targets: []"), searches every make that fits
+# the filters above, which is how "SUVs under $25k near me" is written.
+#
+# A search that names no model can turn up many models. Each one costs
+# an API call to price against its market, so only the few with the most
+# listings are priced (api.price_models below) and the rest are listed
+# unpriced. The search prints what it left out and what pricing it costs.
+#
+# A target may also set its own "body_type" or "powertrain" to override
+# the ones above.
+# Feeds don't always agree with common sense. Marketcheck files the Kia
+# Stinger as a Hatchback, and without an override the car just silently
+# never appears:
+#
+#   - make: "Kia"
+#     model: "Stinger"
+#     body_type: "Hatchback"
+#
+# Any make, model, body type and drivetrain works. Most mainstream
+# models ship with reliability profiles; everything else is
+# searched, priced and ranked exactly the same, just flagged "unrated"
+# because there's no dependability score to fold in.
+#
+# Each call costs API quota, so keep this list to what you'd genuinely
+# consider: one call per entry per search.
+targets:
+  - make: "Toyota"
+    model: "Camry"
+  - make: "Honda"
+    model: "CR-V"
+  - make: "Ford"
+    model: "F-150"
+
+# How results get ranked. Weights should sum to ~1.0.
+#
+# Price and mileage lead on purpose: they're known for every car, so a
+# model with a reliability profile and one without still compete on the
+# same basis. Reliability breaks near-ties rather than deciding the list,
+# and anything with a known problem gets flagged in the report regardless
+# of where it ranks.
+#
+# Raise weight_reliability if you'd rather the first pass actively steer
+# you toward models you've profiled.
+#
+# If a car is missing data for one of these (an unrated model, or too few
+# local comparables to price it against), that weight is spread across
+# the rest and the report says so. No invented numbers.
+scoring:
+  weight_value: 0.45         # price vs. what this spec should cost locally
+  weight_mileage: 0.30       # fewer miles scores higher
+  weight_reliability: 0.15   # dependability of that generation + engine
+  weight_maintenance: 0.10   # cheaper/easier to fix scores higher
+
+# Inputs to the 5-year cost-of-ownership estimate (`run.py research`).
+# The insurance baseline is the one most worth replacing with a real quote.
+ownership:
+  years: 5
+  annual_miles: 12000
+  fuel_price_per_gallon: 3.35
+  baseline_insurance_annual: 1650
+  tire_replacement_interval_miles: 45000
+  annual_registration_usd: 180
+  maintenance_escalation_per_10k: 0.06
+
+# Marketcheck plan limits. The free tier is 500 calls total, 5 req/sec.
+# A search costs one call per target, plus one per model for comparables
+# (cached a week). Check where you stand with:  python run.py usage
+api:
+  call_limit: 500            # refuse to spend past this; null = unlimited
+  warn_at_pct: 80
+  max_requests_per_second: 4
+  # When a search names no model, how many of the models it finds to
+  # price against the market, at one call each. `--price-models N`
+  # overrides it for one run.
+  price_models: 3
+
+output:
+  max_results: 100
+  open_report_when_done: false   # open the HTML report after each run
+  keep_reports: 10               # dated search reports to keep
+  keep_research: 50              # researched cars to keep (research/<VIN>.json)

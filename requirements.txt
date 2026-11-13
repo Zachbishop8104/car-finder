@@ -1,0 +1,4 @@
+# Car Finder needs nothing beyond Python 3.10+ and its standard library.
+#
+# PyYAML is optional. If it is installed it is used to read config.yaml;
+# if not, a built-in reader handles the plain YAML this tool writes.
